@@ -1,0 +1,28 @@
+Для запуска потребуется установленный Docker.
+
+Сборка образа:
+docker build . -f Dockerfile.flask -t skltech
+
+Запуск образа:
+docker run -p 5000:5000 skltech
+
+Используется дев сервер фласки и sqlite, что не рекомендуется на проде.
+Для запуска на postgresql достаточно заменить SKLTECH_DATABASE_URL в докерфайле на нужную строку соединения и добавить в образ psycopg2
+
+REST ресурсы:
+rest.add_resource(Sent, '/messages/<user_login>/sent')
+rest.add_resource(SentMessage, '/messages/<user_login>/sent/<int:message_id>')
+rest.add_resource(Inbox, '/messages/<user_login>/inbox')
+rest.add_resource(InboxMessage, '/messages/<user_login>/inbox/<int:message_id>')
+rest.add_resource(InboxMessageRead, '/messages/<user_login>/inbox/<int:message_id>/read')
+rest.add_resource(InboxMessageUnRead, '/messages/<user_login>/inbox/<int:message_id>/unread')
+
+Для простроты демонстрации в базе при её разворачивании добавляются пользователи:
+op.bulk_insert(user_table, [
+    {'user_login': 'alice@mail', },
+    {'user_login': 'bob@mail', },
+    {'user_login': 'jack@mail', },
+    {'user_login': 'rob@mail', },
+])
+
+Тесты на pytest фреймворке в каталоге tests
